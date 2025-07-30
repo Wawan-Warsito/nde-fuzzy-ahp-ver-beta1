@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>NDE Fuzzy AHP Ver.Beta1</title>
+  
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Analisis Target Proyek Tangki - Fuzzy AHP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #7f8c8d;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(17, 153, 142, 0.3);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            background: #e0e6ed;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        .table tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .rank-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .rank-1 {
+            background: #ffd700;
+            color: #8b6914;
+        }
+
+        .rank-2 {
+            background: #c0c0c0;
+            color: #555;
+        }
+
+        .rank-3 {
+            background: #cd7f32;
+            color: white;
+        }
+
+        .rank-other {
+            background: #e0e6ed;
+            color: #7f8c8d;
+        }
+
+        .chart-container {
+            height: 300px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            background: rgba(17, 153, 142, 0.1);
+            border-color: #11998e;
+            color: #0d7f74;
+        }
+
+        .alert-warning {
+            background: rgba(255, 193, 7, 0.1);
+            border-color: #ffc107;
+            color: #856404;
+        }
+
+        .fuzzy-values {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .fuzzy-input {
+            flex: 1;
+            text-align: center;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .consistency-indicator {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .consistent {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .inconsistent {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Login Modal Styles */
+        .login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .login-card h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        .login-form .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .user-details h3 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+
+        .user-details p {
+            margin: 0;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+            transform: translateY(-1px);
+        }
+
+        /* Chart Container Improvements */
+        .chart-container {
+            height: 400px;
+            margin: 20px 0;
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .chart-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+            font-size: 0.9rem;
+        }
+
+        .chart-btn.active, .chart-btn:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Statistics Cards Enhancement */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card-mini {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border-left: 4px solid;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card-mini:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-card-mini.success {
+            border-left-color: #11998e;
+        }
+
+        .stat-card-mini.warning {
+            border-left-color: #ffc107;
+        }
+
+        .stat-card-mini.info {
+            border-left-color: #667eea;
+        }
+
+        .stat-card-mini.danger {
+            border-left-color: #e74c3c;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Notification System */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 999;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #e74c3c, #ff6b6b);
+        }
+
+        .notification.info {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Modal -->
+        <div id="loginModal" class="login-modal">
+            <div class="login-card">
+                <h2><i class="fas fa-user-shield"></i> Login Sistem</h2>
+                <form class="login-form" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" class="form-control" placeholder="Masukkan username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" class="form-control" placeholder="Masukkan password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userRole">Role</label>
+                        <select id="userRole" class="form-control" required>
+                            <option value="">Pilih Role</option>
+                            <option value="manager">Manajer Proyek</option>
+                            <option value="operator">Operator Sistem/Inspector NDE</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px;">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </form>
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e0e6ed; color: #7f8c8d; font-size: 0.9rem;">
+                    <p><strong>Demo Login:</strong></p>
+                    <p>Manager: admin/admin123</p>
+                    <p>Operator: operator/op123</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Info Bar -->
+        <div id="userInfo" class="user-info hidden">
+            <div class="user-avatar" id="userAvatar">M</div>
+            <div class="user-details">
+                <h3 id="userName">Manajer Proyek</h3>
+                <p id="userRole">Administrator System</p>
+            </div>
+            <div style="margin-left: auto;">
+                <span style="color: #11998e; font-size: 0.9rem; margin-right: 15px;">
+                    <i class="fas fa-clock"></i> <span id="currentTime"></span>
+                </span>
+                <button class="logout-btn" onclick="handleLogout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <div class="header">
+            <h1><i class="fas fa-industry"></i> Sistem Analisis Target Proyek Tangki</h1>
+            <p>Sistem Pendukung Keputusan menggunakan Fuzzy AHP dengan Data NDE</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('input')">
+                <i class="fas fa-keyboard"></i> Input Data NDE
+            </button>
+            <button class="nav-tab" onclick="showTab('dashboard')">
+                <i class="fas fa-chart-line"></i> Dashboard Rekomendasi
+            </button>
+            <button class="nav-tab" onclick="showTab('reports')">
+                <i class="fas fa-file-alt"></i> Laporan & Statistik
+            </button>
+        </div>
+
+        <!-- Tab Input Data NDE -->
+        <div id="input" class="tab-content active">
+            <div class="card">
+                <h2><i class="fas fa-database"></i> Form Input Data NDE</h2>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="projectName">Nama Proyek</label>
+                        <input type="text" id="projectName" class="form-control" placeholder="Masukkan nama proyek tangki">
+                    </div>
+                    <div class="form-group">
+                        <label for="projectDate">Tanggal Evaluasi</label>
+                        <input type="date" id="projectDate" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="penetrantTest">Hasil Penetrant Test (%)</label>
+                        <input type="number" id="penetrantTest" class="form-control" placeholder="0-100" min="0" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="radiographyTest">Hasil Radiography Test (%)</label>
+                        <input type="number" id="radiographyTest" class="form-control" placeholder="0-100" min="0" max="100">
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="materialThickness">Ketebalan Material (mm)</label>
+                        <input type="number" id="materialThickness" class="form-control" placeholder="Ketebalan dalam mm">
+                    </div>
+                    <div class="form-group">
+                        <label for="weldQuality">Kualitas Sambungan Las</label>
+                        <select id="weldQuality" class="form-control">
+                            <option value="">Pilih kualitas</option>
+                            <option value="excellent">Excellent</option>
+                            <option value="good">Good</option>
+                            <option value="fair">Fair</option>
+                            <option value="poor">Poor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h3 style="margin: 30px 0 20px 0; color: #2c3e50;">
+                    <i class="fas fa-sliders-h"></i> Konfigurasi Kriteria Fuzzy AHP
+                </h3>
+
+                <div class="form-group">
+                    <label>Bobot Kriteria Kualitas NDE (Lower, Middle, Upper)</label>
+                    <div class="fuzzy-values">
+                        <input type="number" class="form-control fuzzy-input" placeholder="Lower" step="0.1" min="0" max="1">
+                        <input type="number" class="form-control fuzzy-input" placeholder="Middle" step="0.1" min="0" max="1">
+                        <input type="number" class="form-control fuzzy-input" placeholder="Upper" step="0.1" min="0" max="1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Bobot Kriteria Ketebalan Material (Lower, Middle, Upper)</label>
+                    <div class="fuzzy-values">
+                        <input type="number" class="form-control fuzzy-input" placeholder="Lower" step="0.1" min="0" max="1">
+                        <input type="number" class="form-control fuzzy-input" placeholder="Middle" step="0.1" min="0" max="1">
+                        <input type="number" class="form-control fuzzy-input" placeholder="Upper" step="0.1" min="0" max="1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Bobot Kriteria Kualitas Las (Lower, Middle, Upper)</label>
+                    <div class="fuzzy-values">
+                        <input type="number" class="form-control fuzzy-input" placeholder="Lower" step="0.1" min="0" max="1">
+                        <input type="number" class="form-control fuzzy-input" placeholder="Middle" step="0.1" min="0" max="1">
+                        <input type="number" class="form-control fuzzy-input" placeholder="Upper" step="0.1" min="0" max="1">
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="processData()">
+                        <i class="fas fa-calculator"></i> Proses Analisis Fuzzy AHP
+                    </button>
+                </div>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Memproses analisis menggunakan metode Fuzzy AHP...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Dashboard Rekomendasi -->
+        <div id="dashboard" class="tab-content">
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <h3 id="totalProjects">8</h3>
+                    <p>Total Proyek Dievaluasi</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="consistencyRatio">0.08</h3>
+                    <p>Consistency Ratio</p>
+                    <span class="consistency-indicator consistent">Konsisten</span>
+                </div>
+                <div class="stat-card">
+                    <h3 id="highPriority">3</h3>
+                    <p>Proyek Prioritas Tinggi</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-trophy"></i> Ranking Prioritas Proyek</h2>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Nama Proyek</th>
+                                <th>Skor Akhir</th>
+                                <th>Penetrant Test</th>
+                                <th>Radiography Test</th>
+                                <th>Status Rekomendasi</th>
+                                <th>Confidence Level</th>
+                            </tr>
+                        </thead>
+                        <tbody id="projectRankingTable">
+                            <tr>
+                                <td><span class="rank-badge rank-1">1</span></td>
+                                <td>Tangki Penyimpanan A-001</td>
+                                <td>0.892</td>
+                                <td>95%</td>
+                                <td>98%</td>
+                                <td><span class="alert-success" style="padding: 5px 10px; border-radius: 5px;">Prioritas Tinggi</span></td>
+                                <td>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 89%; background: linear-gradient(135deg, #11998e, #38ef7d);"></div>
+                                    </div>
+                                    89%
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge rank-2">2</span></td>
+                                <td>Pressure Vessel B-002</td>
+                                <td>0.745</td>
+                                <td>88%</td>
+                                <td>92%</td>
+                                <td><span class="alert-success" style="padding: 5px 10px; border-radius: 5px;">Prioritas Tinggi</span></td>
+                                <td>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 75%; background: linear-gradient(135deg, #667eea, #764ba2);"></div>
+                                    </div>
+                                    75%
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge rank-3">3</span></td>
+                                <td>Reaktor C-003</td>
+                                <td>0.658</td>
+                                <td>82%</td>
+                                <td>85%</td>
+                                <td><span class="alert-warning" style="padding: 5px 10px; border-radius: 5px;">Prioritas Sedang</span></td>
+                                <td>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 66%; background: linear-gradient(135deg, #ffc107, #ff8800);"></div>
+                                    </div>
+                                    66%
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-lightbulb"></i> Rekomendasi Sistem</h2>
+                <div class="alert alert-success">
+                    <h4><i class="fas fa-check-circle"></i> Analisis Selesai</h4>
+                    <p>Berdasarkan hasil analisis Fuzzy AHP, sistem merekomendasikan untuk memprioritaskan proyek dengan ranking 1-2 untuk pelaksanaan segera. Consistency Ratio sebesar 0.08 menunjukkan bahwa penilaian konsisten dan dapat diandalkan.</p>
+                </div>
+                <div class="alert alert-warning">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Perhatian</h4>
+                    <p>Proyek dengan ranking 3 dan di bawahnya memerlukan evaluasi tambahan. Pertimbangkan untuk melakukan pengujian NDE tambahan atau perbaikan sebelum pelaksanaan.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Laporan & Statistik -->
+        <div id="reports" class="tab-content">
+            <!-- Statistics Overview -->
+            <div class="card">
+                <h2><i class="fas fa-chart-pie"></i> Overview Statistik</h2>
+                <div class="stats-grid">
+                    <div class="stat-card-mini success">
+                        <h3 id="avgScore">0.745</h3>
+                        <p>Rata-rata Skor</p>
+                    </div>
+                    <div class="stat-card-mini info">
+                        <h3 id="totalTests">156</h3>
+                        <p>Total Tes NDE</p>
+                    </div>
+                    <div class="stat-card-mini warning">
+                        <h3 id="pendingReview">12</h3>
+                        <p>Pending Review</p>
+                    </div>
+                    <div class="stat-card-mini danger">
+                        <h3 id="failedTests">3</h3>
+                        <p>Tes Gagal</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-chart-bar"></i> Statistik Evaluasi</h2>
+                <div class="chart-controls">
+                    <button class="chart-btn active" onclick="changeChart('bar')">
+                        <i class="fas fa-chart-bar"></i> Bar Chart
+                    </button>
+                    <button class="chart-btn" onclick="changeChart('pie')">
+                        <i class="fas fa-chart-pie"></i> Pie Chart
+                    </button>
+                    <button class="chart-btn" onclick="changeChart('line')">
+                        <i class="fas fa-chart-line"></i> Line Chart
+                    </button>
+                    <button class="chart-btn" onclick="changeChart('radar')">
+                        <i class="fas fa-satellite-dish"></i> Radar Chart
+                    </button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="evaluationChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-table"></i> Laporan Detail Analisis</h2>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Kriteria</th>
+                                <th>Bobot Fuzzy (L,M,U)</th>
+                                <th>Bobot Crisp</th>
+                                <th>Pengaruh (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Kualitas NDE</td>
+                                <td>(0.5, 0.7, 0.9)</td>
+                                <td>0.7</td>
+                                <td>45%</td>
+                            </tr>
+                            <tr>
+                                <td>Ketebalan Material</td>
+                                <td>(0.3, 0.5, 0.7)</td>
+                                <td>0.5</td>
+                                <td>32%</td>
+                            </tr>
+                            <tr>
+                                <td>Kualitas Las</td>
+                                <td>(0.2, 0.3, 0.5)</td>
+                                <td>0.33</td>
+                                <td>23%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-download"></i> Export Laporan</h2>
+                <p>Unduh laporan hasil analisis dalam berbagai format:</p>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="exportReport('pdf')">
+                        <i class="fas fa-file-pdf"></i> Export PDF
+                    </button>
+                    <button class="btn btn-success" onclick="exportReport('excel')">
+                        <i class="fas fa-file-excel"></i> Export Excel
+                    </button>
+                    <button class="btn btn-primary" onclick="exportReport('html')">
+                        <i class="fas fa-file-code"></i> Export HTML
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-history"></i> Log Aktivitas</h2>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>User</th>
+                                <th>Aktivitas</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2024-01-15 10:30:25</td>
+                                <td>Manajer Proyek</td>
+                                <td>Input data NDE Proyek A-001</td>
+                                <td><span class="alert-success" style="padding: 3px 8px; border-radius: 3px;">Berhasil</span></td>
+                            </tr>
+                            <tr>
+                                <td>2024-01-15 10:35:12</td>
+                                <td>Operator Sistem</td>
+                                <td>Proses analisis Fuzzy AHP</td>
+                                <td><span class="alert-success" style="padding: 3px 8px; border-radius: 3px;">Berhasil</span></td>
+                            </tr>
+                            <tr>
+                                <td>2024-01-15 10:40:08</td>
+                                <td>Manajer Proyek</td>
+                                <td>Generate laporan final</td>
+                                <td><span class="alert-success" style="padding: 3px 8px; border-radius: 3px;">Berhasil</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let evaluationChart = null;
+        let chartType = 'bar';
+
+        // Sample data for charts
+        const chartData = {
+            projects: ['Tangki A-001', 'Vessel B-002', 'Reaktor C-003', 'Tangki D-004', 'Vessel E-005'],
+            scores: [0.892, 0.745, 0.658, 0.543, 0.421],
+            penetrantTests: [95, 88, 82, 76, 65],
+            radiographyTests: [98, 92, 85, 78, 70],
+            criteriaWeights: {
+                labels: ['Kualitas NDE', 'Ketebalan Material', 'Kualitas Las', 'Kondisi Umum'],
+                values: [45, 32, 23, 15]
+            },
+            monthlyData: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                projects: [12, 19, 15, 25, 22, 30],
+                avgScores: [0.72, 0.75, 0.68, 0.81, 0.79, 0.85]
+            }
+        };
+
+        // FIXED: Login handling with proper form reset
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const role = document.getElementById('userRole').value;
+            
+            // Validasi input kosong
+            if (!username) {
+                showNotification('Username harus diisi!', 'error');
+                document.getElementById('username').focus();
+                return;
+            }
+            
+            if (!password) {
+                showNotification('Password harus diisi!', 'error');
+                document.getElementById('password').focus();
+                return;
+            }
+            
+            if (!role) {
+                showNotification('Role harus dipilih!', 'error');
+                document.getElementById('userRole').focus();
+                return;
+            }
+            
+            // Simple validation for demo
+            const validUsers = {
+                'admin': { password: 'admin123', role: 'manager', name: 'Wawan Warsito' },
+                'operator': { password: 'op123', role: 'operator', name: 'Aryo Leonandi' },
+                'manager': { password: 'mgr123', role: 'manager', name: 'Siti Rahayu' }
+            };
+            
+            if (validUsers[username] && validUsers[username].password === password) {
+                // Validasi role sesuai dengan user
+                if (validUsers[username].role !== role) {
+                    showNotification('Role tidak sesuai dengan user!', 'error');
+                    return;
+                }
+                
+                currentUser = {
+                    username: username,
+                    name: validUsers[username].name,
+                    role: validUsers[username].role
+                };
+                
+                showNotification('Login berhasil! Selamat datang ' + currentUser.name, 'success');
+                
+                setTimeout(() => {
+                    document.getElementById('loginModal').style.display = 'none';
+                    document.getElementById('userInfo').classList.remove('hidden');
+                    updateUserInfo();
+                    startClock();
+                    customizeUIForRole();
+                }, 1500);
+            } else {
+                showNotification('Username atau password salah!', 'error');
+                
+                // Highlight field yang error
+                document.getElementById('username').style.borderColor = '#e74c3c';
+                document.getElementById('password').style.borderColor = '#e74c3c';
+                
+                // Reset error styling setelah user mulai mengetik
+                setTimeout(() => {
+                    document.getElementById('username').style.borderColor = '';
+                    document.getElementById('password').style.borderColor = '';
+                }, 3000);
+            }
+        }
+
+        // FIXED: Logout handling with proper form reset
+        function handleLogout() {
+            if (confirm('Apakah Anda yakin ingin logout?')) {
+                // Reset user data
+                currentUser = null;
+                
+                // Show login modal
+                document.getElementById('loginModal').style.display = 'flex';
+                document.getElementById('userInfo').classList.add('hidden');
+                
+                // Reset semua field form login dengan benar
+                resetLoginForm();
+                
+                showNotification('Berhasil logout', 'info');
+                addToActivityLog('User logout', 'Berhasil');
+            }
+        }
+
+        // FIXED: Fungsi terpisah untuk reset form login
+        function resetLoginForm() {
+            // Reset input fields
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            
+            // Reset select field dengan cara yang benar
+            const roleSelect = document.getElementById('userRole');
+            roleSelect.selectedIndex = 0; // Set ke option pertama (Pilih Role)
+            roleSelect.value = '';
+            
+            // Hapus styling error jika ada
+            document.getElementById('username').style.borderColor = '';
+            document.getElementById('password').style.borderColor = '';
+            roleSelect.style.borderColor = '';
+            
+            // Focus ke field username untuk kemudahan penggunaan
+            setTimeout(() => {
+                document.getElementById('username').focus();
+            }, 100);
+        }
+
+        // FIXED: Fungsi untuk memastikan form login ter-reset saat page load
+        function initializeLoginForm() {
+            // Pastikan modal login visible
+            const loginModal = document.getElementById('loginModal');
+            loginModal.style.display = 'flex';
+            
+            // Reset form
+            resetLoginForm();
+            
+            // Add event listener untuk reset error styling saat user mengetik
+            document.getElementById('username').addEventListener('input', function() {
+                this.style.borderColor = '';
+            });
+            
+            document.getElementById('password').addEventListener('input', function() {
+                this.style.borderColor = '';
+            });
+            
+            document.getElementById('userRole').addEventListener('change', function() {
+                this.style.borderColor = '';
+            });
+        }
+
+        // Tambahan: Force refresh login form jika terjadi masalah
+        function forceRefreshLoginForm() {
+            const loginModal = document.getElementById('loginModal');
+            
+            // Hide dan show ulang modal
+            loginModal.style.display = 'none';
+            setTimeout(() => {
+                loginModal.style.display = 'flex';
+                resetLoginForm();
+            }, 100);
+        }
+
+        // Update user info display
+        function updateUserInfo() {
+            if (currentUser) {
+                document.getElementById('userAvatar').textContent = currentUser.name.charAt(0);
+                document.getElementById('userName').textContent = currentUser.name;
+                
+                const roleLabels = {
+                    'manager': 'Manajer Proyek',
+                    'operator': 'Operator Sistem/Inspector NDE',
+                    'admin': 'Administrator'
+                };
+                
+                document.getElementById('userRole').textContent = roleLabels[currentUser.role] || currentUser.role;
+                
+                // Add login to activity log
+                addToActivityLog('User login: ' + currentUser.name, 'Berhasil');
+            }
+        }
+
+        // Start real-time clock
+        function startClock() {
+            function updateTime() {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('id-ID', { 
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    second: '2-digit' 
+                });
+                const timeElement = document.getElementById('currentTime');
+                if (timeElement) {
+                    timeElement.textContent = timeString;
+                }
+            }
+            
+            updateTime();
+            setInterval(updateTime, 1000);
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                ${message}
+            `;
+            
+            document.getElementById('notificationContainer').appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Chart management
+        function initializeChart() {
+            const ctx = document.getElementById('evaluationChart').getContext('2d');
+            createChart(ctx, 'bar');
+        }
+
+        function createChart(ctx, type) {
+            if (evaluationChart) {
+                evaluationChart.destroy();
+            }
+            
+            let config = {};
+            
+            switch(type) {
+                case 'bar':
+                    config = {
+                        type: 'bar',
+                        data: {
+                            labels: chartData.projects,
+                            datasets: [{
+                                label: 'Skor Prioritas',
+                                data: chartData.scores,
+                                backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                                borderColor: 'rgba(102, 126, 234, 1)',
+                                borderWidth: 2,
+                                borderRadius: 8,
+                                borderSkipped: false,
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Ranking Prioritas Proyek'
+                                },
+                                legend: {
+                                    display: false
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 1,
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
+                                    }
+                                },
+                                x: {
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
+                                    }
+                                }
+                            }
+                        }
+                    };
+                    break;
+                    
+                case 'pie':
+                    config = {
+                        type: 'pie',
+                        data: {
+                            labels: chartData.criteriaWeights.labels,
+                            datasets: [{
+                                data: chartData.criteriaWeights.values,
+                                backgroundColor: [
+                                    'rgba(102, 126, 234, 0.8)',
+                                    'rgba(17, 153, 142, 0.8)',
+                                    'rgba(255, 193, 7, 0.8)',
+                                    'rgba(231, 76, 60, 0.8)'
+                                ],
+                                borderWidth: 3,
+                                borderColor: '#fff'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Distribusi Bobot Kriteria (%)'
+                                },
+                                legend: {
+                                    position: 'bottom'
+                                }
+                            }
+                        }
+                    };
+                    break;
+                    
+                case 'line':
+                    config = {
+                        type: 'line',
+                        data: {
+                            labels: chartData.monthlyData.labels,
+                            datasets: [{
+                                label: 'Jumlah Proyek',
+                                data: chartData.monthlyData.projects,
+                                borderColor: 'rgba(102, 126, 234, 1)',
+                                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                                borderWidth: 3,
+                                fill: true,
+                                tension: 0.4
+                            }, {
+                                label: 'Rata-rata Skor',
+                                data: chartData.monthlyData.avgScores,
+                                borderColor: 'rgba(17, 153, 142, 1)',
+                                backgroundColor: 'rgba(17, 153, 142, 0.1)',
+                                borderWidth: 3,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y1'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Trend Evaluasi Bulanan'
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'left',
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
+                                    }
+                                },
+                                y1: {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'right',
+                                    max: 1,
+                                    grid: {
+                                        drawOnChartArea: false,
+                                    },
+                                },
+                                x: {
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
+                                    }
+                                }
+                            }
+                        }
+                    };
+                    break;
+                    
+                case 'radar':
+                    config = {
+                        type: 'radar',
+                        data: {
+                            labels: ['Penetrant Test', 'Radiography Test', 'Material Quality', 'Weld Quality', 'Overall Score'],
+                            datasets: [{
+                                label: 'Tangki A-001',
+                                data: [95, 98, 90, 92, 89],
+                                borderColor: 'rgba(102, 126, 234, 1)',
+                                backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                                borderWidth: 2
+                            }, {
+                                label: 'Vessel B-002',
+                                data: [88, 92, 85, 87, 75],
+                                borderColor: 'rgba(17, 153, 142, 1)',
+                                backgroundColor: 'rgba(17, 153, 142, 0.2)',
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Perbandingan Multi-Kriteria'
+                                }
+                            },
+                            scales: {
+                                r: {
+                                    beginAtZero: true,
+                                    max: 100,
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.2)'
+                                    },
+                                    angleLines: {
+                                        color: 'rgba(255, 255, 255, 0.2)'
+                                    }
+                                }
+                            }
+                        }
+                    };
+                    break;
+            }
+            
+            evaluationChart = new Chart(ctx, config);
+        }
+
+        function changeChart(type) {
+            chartType = type;
+            
+            // Update button states
+            document.querySelectorAll('.chart-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Recreate chart
+            const ctx = document.getElementById('evaluationChart').getContext('2d');
+            createChart(ctx, type);
+            
+            showNotification(`Chart berubah ke ${type.toUpperCase()}`, 'info');
+        }
+
+        // Enhanced tab switching with user role validation
+        function showTab(tabName) {
+            if (!currentUser) {
+                showNotification('Anda harus login terlebih dahulu!', 'error');
+                return;
+            }
+            
+            // Role-based access control
+            if (tabName === 'reports' && currentUser.role === 'operator') {
+                showNotification('Akses laporan terbatas untuk role operator!', 'error');
+                return;
+            }
+            
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => tab.classList.remove('active'));
+            
+            // Remove active class from all nav tabs
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            // Add activity log
+            addToActivityLog(`Mengakses tab ${tabName}`, 'Berhasil');
+        }
+
+        // Enhanced process data with better validation
+        function processData() {
+            if (!currentUser) {
+                showNotification('Anda harus login terlebih dahulu!', 'error');
+                return;
+            }
+            
+            if (!validateForm()) {
+                showNotification('Mohon lengkapi semua field yang diperlukan!', 'error');
+                return;
+            }
+            
+            const projectName = document.getElementById('projectName').value;
+            const penetrantTest = document.getElementById('penetrantTest').value;
+            const radiographyTest = document.getElementById('radiographyTest').value;
+            const materialThickness = document.getElementById('materialThickness').value;
+            const weldQuality = document.getElementById('weldQuality').value;
+            
+            // Validate fuzzy values
+            const fuzzyInputs = document.querySelectorAll('.fuzzy-input');
+            let fuzzyValid = true;
+            fuzzyInputs.forEach(input => {
+                if (!input.value || parseFloat(input.value) < 0 || parseFloat(input.value) > 1) {
+                    fuzzyValid = false;
+                }
+            });
+            
+            if (!fuzzyValid) {
+                showNotification('Mohon lengkapi semua nilai fuzzy dengan benar (0-1)!', 'error');
+                return;
+            }
+            
+            // Show loading with progress
+            const loadingDiv = document.getElementById('loading');
+            loadingDiv.style.display = 'block';
+            
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += 10;
+                loadingDiv.innerHTML = `
+                    <div class="spinner"></div>
+                    <p>Memproses analisis menggunakan metode Fuzzy AHP... ${progress}%</p>
+                    <div class="progress-bar" style="max-width: 300px; margin: 0 auto;">
+                        <div class="progress-fill" style="width: ${progress}%; background: linear-gradient(135deg, #667eea, #764ba2);"></div>
+                    </div>
+                `;
+                
+                if (progress >= 100) {
+                    clearInterval(progressInterval);
+                    setTimeout(() => {
+                        loadingDiv.style.display = 'none';
+                        showSuccessMessage();
+                        addProjectToRanking(projectName, penetrantTest, radiographyTest, materialThickness, weldQuality);
+                        updateChartData(projectName, penetrantTest, radiographyTest);
+                        autoSwitchToDashboard();
+                        showNotification('Analisis Fuzzy AHP berhasil diproses!', 'success');
+                    }, 500);
+                }
+            }, 200);
+        }
+
+        // Update chart data with new project
+        function updateChartData(projectName, penetrant, radiography) {
+            const score = ((parseFloat(penetrant) + parseFloat(radiography)) / 200).toFixed(3);
+            
+            // Add tooltips for fuzzy inputs
+            document.querySelectorAll('.fuzzy-input').forEach((input, index) => {
+                const labels = ['Nilai Minimum', 'Nilai Paling Mungkin', 'Nilai Maksimum'];
+                input.title = labels[index % 3] + ' (0-1)';
+            });
+            
+            // Update statistics periodically
+            updateStatisticsDisplay();
+            
+            // Add to chart data
+            chartData.projects.push(projectName);
+            chartData.scores.push(parseFloat(score));
+            chartData.penetrantTests.push(parseFloat(penetrant));
+            chartData.radiographyTests.push(parseFloat(radiography));
+            
+            // Keep only last 5 projects for better visualization
+            if (chartData.projects.length > 5) {
+                chartData.projects.shift();
+                chartData.scores.shift();
+                chartData.penetrantTests.shift();
+                chartData.radiographyTests.shift();
+            }
+            
+            // Update chart if currently displayed
+            if (evaluationChart && chartType === 'bar') {
+                const ctx = document.getElementById('evaluationChart').getContext('2d');
+                createChart(ctx, 'bar');
+            }
+        }
+
+        // Enhanced export functionality with user tracking
+        function exportReport(format) {
+            if (!currentUser) {
+                showNotification('Anda harus login untuk mengexport laporan!', 'error');
+                return;
+            }
+            
+            const exportButton = event.target;
+            const originalText = exportButton.innerHTML;
+            
+            exportButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyiapkan...';
+            exportButton.disabled = true;
+            
+            setTimeout(() => {
+                exportButton.innerHTML = originalText;
+                exportButton.disabled = false;
+                
+                // Create download simulation
+                const link = document.createElement('a');
+                link.href = '#';
+                link.download = `laporan_nde_${format}_${new Date().toISOString().split('T')[0]}.${format}`;
+                
+                showNotification(`Laporan ${format.toUpperCase()} berhasil diunduh!\nFile: ${link.download}`, 'success');
+                
+                // Add to activity log
+                addToActivityLog(`Export laporan ${format.toUpperCase()} oleh ${currentUser.name}`, 'Berhasil');
+            }, 2000);
+        }
+
+        // Enhanced add to activity log with user info
+        function addToActivityLog(activity, status) {
+            const logTable = document.querySelector('#reports table:last-of-type tbody');
+            const now = new Date();
+            const timestamp = now.toLocaleString('id-ID');
+            
+            const statusClass = status === 'Berhasil' ? 'alert-success' : 'alert-danger';
+            const userName = currentUser ? currentUser.name : 'Unknown User';
+            
+            const newLogRow = `
+                <tr>
+                    <td>${timestamp}</td>
+                    <td>${userName}</td>
+                    <td>${activity}</td>
+                    <td><span class="${statusClass}" style="padding: 3px 8px; border-radius: 3px;">${status}</span></td>
+                </tr>
+            `;
+            
+            logTable.insertAdjacentHTML('afterbegin', newLogRow);
+            
+            // Keep only last 10 log entries
+            const rows = logTable.querySelectorAll('tr');
+            if (rows.length > 10) {
+                rows[rows.length - 1].remove();
+            }
+        }
+
+        // Update statistics display
+        function updateStatisticsDisplay() {
+            // Simulate real-time statistics updates
+            setInterval(() => {
+                const avgScore = (Math.random() * 0.3 + 0.65).toFixed(3);
+                const totalTests = Math.floor(Math.random() * 50 + 150);
+                const pendingReview = Math.floor(Math.random() * 10 + 5);
+                const failedTests = Math.floor(Math.random() * 5 + 1);
+                
+                document.getElementById('avgScore').textContent = avgScore;
+                document.getElementById('totalTests').textContent = totalTests;
+                document.getElementById('pendingReview').textContent = pendingReview;
+                document.getElementById('failedTests').textContent = failedTests;
+            }, 15000);
+        }
+
+        // Enhanced auto-save with user tracking
+        function autoSave() {
+            if (!currentUser) return;
+            
+            const formData = {
+                user: currentUser.username,
+                timestamp: new Date().toISOString(),
+                projectName: document.getElementById('projectName').value,
+                projectDate: document.getElementById('projectDate').value,
+                penetrantTest: document.getElementById('penetrantTest').value,
+                radiographyTest: document.getElementById('radiographyTest').value,
+                materialThickness: document.getElementById('materialThickness').value,
+                weldQuality: document.getElementById('weldQuality').value
+            };
+            
+            // In a real application, this would save to server
+            if (formData.projectName || formData.penetrantTest || formData.radiographyTest) {
+                console.log('Auto-saved:', formData);
+                showNotification('Data otomatis tersimpan', 'info');
+            }
+        }
+
+        // Role-based UI customization
+        function customizeUIForRole() {
+            if (!currentUser) return;
+            
+            const role = currentUser.role;
+            
+            // Hide/show elements based on role
+            if (role === 'operator') {
+                // Operators can't access certain export functions
+                const exportButtons = document.querySelectorAll('.btn[onclick*="exportReport"]');
+                exportButtons.forEach(btn => {
+                    if (btn.textContent.includes('PDF') || btn.textContent.includes('Excel')) {
+                        btn.style.display = 'none';
+                    }
+                });
+                
+                // Add operator-specific notifications
+                showNotification('Mode Operator: Akses terbatas pada beberapa fitur', 'info');
+            } else if (role === 'manager') {
+                // Managers get full access
+                showNotification('Mode Manajer: Akses penuh ke semua fitur', 'success');
+            }
+        }
+
+        // Enhanced validation with role-specific rules
+        function validateForm() {
+            const requiredFields = [
+                'projectName',
+                'projectDate',
+                'penetrantTest',
+                'radiographyTest',
+                'materialThickness',
+                'weldQuality'
+            ];
+            
+            let isValid = true;
+            let missingFields = [];
+            
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#e74c3c';
+                    missingFields.push(field.previousElementSibling.textContent);
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '#11998e';
+                }
+            });
+            
+            // Role-specific validation
+            if (currentUser && currentUser.role === 'operator') {
+                const penetrant = parseFloat(document.getElementById('penetrantTest').value);
+                const radiography = parseFloat(document.getElementById('radiographyTest').value);
+                
+                if (penetrant > 95 || radiography > 95) {
+                    showNotification('Nilai tes > 95% memerlukan verifikasi supervisor', 'warning');
+                }
+            }
+            
+            if (!isValid) {
+                showNotification(`Field yang harus diisi: ${missingFields.join(', ')}`, 'error');
+            }
+            
+            return isValid;
+        }
+
+        // Initialize security features
+        function initializeSecurity() {
+            // Session timeout (demo: 30 minutes)
+            let sessionTimeout;
+            
+            function resetSessionTimeout() {
+                clearTimeout(sessionTimeout);
+                sessionTimeout = setTimeout(() => {
+                    if (currentUser) {
+                        showNotification('Sesi telah berakhir. Silakan login kembali.', 'warning');
+                        handleLogout();
+                    }
+                }, 30 * 60 * 1000); // 30 minutes
+            }
+            
+            // Reset timeout on user activity
+            document.addEventListener('click', resetSessionTimeout);
+            document.addEventListener('keypress', resetSessionTimeout);
+            
+            // Initialize timeout
+            resetSessionTimeout();
+        }
+
+        // Show success message
+        function showSuccessMessage() {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'alert alert-success';
+            successDiv.innerHTML = `
+                <h4><i class="fas fa-check-circle"></i> Analisis Berhasil!</h4>
+                <p>Data NDE telah berhasil diproses menggunakan metode Fuzzy AHP. Consistency Ratio: 0.08 (Konsisten)</p>
+            `;
+            
+            document.querySelector('#input .card').insertAdjacentElement('afterbegin', successDiv);
+            
+            setTimeout(() => {
+                successDiv.remove();
+            }, 5000);
+        }
+
+        // Auto switch to dashboard
+        function autoSwitchToDashboard() {
+            setTimeout(() => {
+                document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                
+                document.querySelector('.nav-tab[onclick="showTab(\'dashboard\')"]').classList.add('active');
+                document.getElementById('dashboard').classList.add('active');
+            }, 1000);
+        }
+
+        // Enhanced add project to ranking
+        function addProjectToRanking(name, penetrant, radiography, thickness, weldQuality) {
+            const tableBody = document.getElementById('projectRankingTable');
+            
+            // Calculate more sophisticated score
+            const penetrantScore = parseFloat(penetrant) / 100;
+            const radiographyScore = parseFloat(radiography) / 100;
+            const thicknessScore = Math.min(parseFloat(thickness) / 50, 1); // Normalize thickness
+            const weldScore = getWeldQualityScore(weldQuality);
+            
+            // Weighted average with fuzzy considerations
+            const finalScore = (penetrantScore * 0.4 + radiographyScore * 0.3 + thicknessScore * 0.2 + weldScore * 0.1).toFixed(3);
+            const confidence = Math.round(finalScore * 100);
+            
+            let priorityStatus = '';
+            let priorityClass = '';
+            
+            if (finalScore >= 0.8) {
+                priorityStatus = 'Prioritas Tinggi';
+                priorityClass = 'alert-success';
+            } else if (finalScore >= 0.6) {
+                priorityStatus = 'Prioritas Sedang';
+                priorityClass = 'alert-warning';
+            } else {
+                priorityStatus = 'Prioritas Rendah';
+                priorityClass = 'alert-danger';
+            }
+            
+            const currentRows = tableBody.children.length;
+            const rankNumber = currentRows + 1;
+            
+            const newRow = `
+                <tr>
+                    <td><span class="rank-badge rank-other">${rankNumber}</span></td>
+                    <td>${name}</td>
+                    <td>${finalScore}</td>
+                    <td>${penetrant}%</td>
+                    <td>${radiography}%</td>
+                    <td><span class="${priorityClass}" style="padding: 5px 10px; border-radius: 5px;">${priorityStatus}</span></td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${confidence}%; background: linear-gradient(135deg, #667eea, #764ba2);"></div>
+                        </div>
+                        ${confidence}%
+                    </td>
+                </tr>
+            `;
+            
+            tableBody.insertAdjacentHTML('beforeend', newRow);
+            
+            // Update statistics
+            updateStatistics();
+            
+            // Add to log
+            addToActivityLog('Input data NDE ' + name, 'Berhasil');
+        }
+
+        // Get weld quality score
+        function getWeldQualityScore(quality) {
+            const scores = {
+                'excellent': 1.0,
+                'good': 0.8,
+                'fair': 0.6,
+                'poor': 0.4
+            };
+            return scores[quality] || 0.5;
+        }
+
+        // Update statistics
+        function updateStatistics() {
+            const totalElement = document.getElementById('totalProjects');
+            const highPriorityElement = document.getElementById('highPriority');
+            
+            const currentTotal = parseInt(totalElement.textContent);
+            totalElement.textContent = currentTotal + 1;
+            
+            // Count high priority projects (score >= 0.8)
+            const rows = document.querySelectorAll('#projectRankingTable tr');
+            let highPriorityCount = 0;
+            
+            rows.forEach(row => {
+                const scoreCell = row.cells[2];
+                if (scoreCell && parseFloat(scoreCell.textContent) >= 0.8) {
+                    highPriorityCount++;
+                }
+            });
+            
+            highPriorityElement.textContent = highPriorityCount;
+        }
+
+        // Validate consistency ratio
+        function validateConsistencyRatio() {
+            const cr = parseFloat(document.getElementById('consistencyRatio').textContent);
+            const indicator = document.querySelector('.consistency-indicator');
+            
+            if (cr <= 0.1) {
+                indicator.className = 'consistency-indicator consistent';
+                indicator.textContent = 'Konsisten';
+            } else {
+                indicator.className = 'consistency-indicator inconsistent';
+                indicator.textContent = 'Tidak Konsisten';
+            }
+        }
+
+        // Enhanced keyboard shortcuts with role awareness
+        document.addEventListener('keydown', function(e) {
+            if (!currentUser) return;
+            
+            // Ctrl + Enter to process data
+            if (e.ctrlKey && e.key === 'Enter') {
+                if (document.getElementById('input').classList.contains('active')) {
+                    processData();
+                }
+            }
+            
+            // Tab navigation with Ctrl + number keys
+            if (e.ctrlKey && e.key >= '1' && e.key <= '3') {
+                const tabs = ['input', 'dashboard', 'reports'];
+                const tabIndex = parseInt(e.key) - 1;
+                if (tabs[tabIndex]) {
+                    // Check role permissions
+                    if (tabs[tabIndex] === 'reports' && currentUser.role === 'operator') {
+                        showNotification('Akses terbatas untuk role operator', 'error');
+                        return;
+                    }
+                    
+                    showTab(tabs[tabIndex]);
+                    document.querySelector(`.nav-tab[onclick="showTab('${tabs[tabIndex]}')"]`).classList.add('active');
+                }
+            }
+            
+            // Ctrl + L for logout
+            if (e.ctrlKey && e.key === 'l') {
+                e.preventDefault();
+                handleLogout();
+            }
+            
+            // Ctrl + S for manual save
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                autoSave();
+                showNotification('Data berhasil disimpan manual', 'success');
+            }
+        });
+
+        // Simulate real-time updates
+        function simulateRealTimeUpdates() {
+            // Update consistency ratio periodically
+            setInterval(() => {
+                if (currentUser) {
+                    const randomCR = (Math.random() * 0.15).toFixed(3);
+                    document.getElementById('consistencyRatio').textContent = randomCR;
+                    validateConsistencyRatio();
+                }
+            }, 10000);
+            
+            // Update user count simulation
+            setInterval(() => {
+                if (currentUser) {
+                    const onlineUsers = Math.floor(Math.random() * 5 + 2);
+                    console.log(`Online users: ${onlineUsers}`);
+                }
+            }, 60000);
+        }
+
+        // FIXED: Initialize all features when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSecurity();
+            initializeLoginForm(); // FIXED: Gunakan fungsi baru
+            
+            // Add welcome message
+            setTimeout(() => {
+                showNotification('Selamat datang di Sistem Analisis Target Proyek Tangki', 'info');
+            }, 1000);
+        });
+
+        // Auto-save every 30 seconds
+        setInterval(autoSave, 30000);
+
+        // Final initialization
+        window.addEventListener('load', function() {
+            // Preload chart when user logs in
+            setTimeout(() => {
+                if (currentUser && document.getElementById('evaluationChart')) {
+                    initializeChart();
+                    customizeUIForRole();
+                }
+            }, 2000);
+            
+            // Initialize real-time updates
+            simulateRealTimeUpdates();
+            
+            // Set current date
+            document.getElementById('projectDate').valueAsDate = new Date();
+            
+            // Add tooltips for fuzzy inputs
+            document.querySelectorAll('.fuzzy-input').forEach((input, index) => {
+                const labels = ['Nilai Minimum', 'Nilai Paling Mungkin', 'Nilai Maksimum'];
+                input.title = labels[index % 3] + ' (0-1)';
+            });
+        });
+
+        // Validation for fuzzy inputs
+        document.querySelectorAll('.fuzzy-input').forEach(input => {
+            input.addEventListener('blur', function() {
+                const value = parseFloat(this.value);
+                if (value < 0 || value > 1) {
+                    showNotification('Nilai fuzzy harus berada dalam rentang 0-1', 'error');
+                    this.focus();
+                }
+            });
+        });
+
+        // Real-time data validation
+        function validateNDEInput() {
+            const penetrant = document.getElementById('penetrantTest').value;
+            const radiography = document.getElementById('radiographyTest').value;
+            
+            if (penetrant && (penetrant < 0 || penetrant > 100)) {
+                showNotification('Nilai Penetrant Test harus berada dalam rentang 0-100%', 'error');
+                document.getElementById('penetrantTest').focus();
+            }
+            
+            if (radiography && (radiography < 0 || radiography > 100)) {
+                showNotification('Nilai Radiography Test harus berada dalam rentang 0-100%', 'error');
+                document.getElementById('radiographyTest').focus();
+            }
+        }
+
+        // Add event listeners for real-time validation
+        document.getElementById('penetrantTest').addEventListener('blur', validateNDEInput);
+        document.getElementById('radiographyTest').addEventListener('blur', validateNDEInput);
+    </script>
+</body>
+</html>
+<!-- partial -->
+  
+</body>
+</html>
